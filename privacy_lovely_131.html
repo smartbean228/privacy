@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>隐私政策 · 多语言</title>
+	<style>
+		/* ===== 基础重置 ===== */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+			line-height: 1.8;
+			/* 统一上边距：所有语言区块共享 */
+			padding: 44px 20px 40px;
+			color: #333;
+			background: #fafafa;
+			max-width: 860px;
+			margin: 0 auto;
+		}
+
+		/* ===== 右上角导航按钮 ===== */
+		.lang-nav {
+			position: fixed;
+			top: 16px;
+			right: 20px;
+			display: flex;
+			gap: 10px;
+			z-index: 999;
+			background: rgba(255, 255, 255, 0.92);
+			padding: 6px 14px 6px 12px;
+			border-radius: 40px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10);
+			backdrop-filter: blur(6px);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+		}
+
+		.lang-btn {
+			background: transparent;
+			border: none;
+			padding: 4px 14px;
+			border-radius: 30px;
+			font-size: 14px;
+			font-weight: 500;
+			color: #888;
+			cursor: pointer;
+			transition: all 0.25s ease;
+			font-family: inherit;
+			letter-spacing: 0.3px;
+		}
+
+		.lang-btn:hover {
+			color: #222;
+			background: rgba(0, 0, 0, 0.04);
+		}
+
+		.lang-btn.active {
+			color: #fff;
+			background: #3b7cff;
+			box-shadow: 0 2px 10px rgba(59, 124, 255, 0.30);
+		}
+
+		/* ===== 语言区块通用（所有区块统一） ===== */
+		.lang-section {
+			background: #ffffff;
+			border-radius: 20px;
+			/* 统一顶部内边距 */
+			padding: 14px 36px 40px;
+			margin-bottom: 48px;
+			box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+			border: 1px solid #f0f0f0;
+			/* 统一滚动偏移，确保每个区块跳转后位置一致 */
+			scroll-margin-top: 70px;
+			transition: border-color 0.3s;
+		}
+
+		.lang-section:target {
+			border-color: #3b7cff;
+		}
+
+		/* 语言标签样式统一 */
+		.lang-label {
+			display: inline-block;
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+			color: #fff;
+			background: #3b7cff;
+			padding: 3px 18px;
+			border-radius: 30px;
+			/* 统一与标题的间距 */
+			margin-bottom: 14px;
+		}
+
+		.lang-label.zh-hant {
+			background: #e67e22;
+		}
+
+		.lang-label.en {
+			background: #27ae60;
+		}
+
+		/* ===== 标题样式 ===== */
+		h1 {
+			font-size: 22px;
+			text-align: center;
+			margin-bottom: 24px;
+			font-weight: 700;
+			color: #1a1a1a;
+		}
+
+		h2 {
+			font-size: 18px;
+			margin-top: 30px;
+			margin-bottom: 10px;
+			color: #222;
+			font-weight: 700;
+			border-bottom: 2px solid #f0f4ff;
+			padding-bottom: 6px;
+		}
+
+		p {
+			margin: 8px 0;
+			font-size: 15px;
+			color: #3d3d3d;
+		}
+
+		strong {
+			color: #1a1a1a;
+		}
+
+		/* ===== 响应式（移动端也统一） ===== */
+		@media (max-width: 640px) {
+			body {
+				padding: 50px 14px 30px;
+			}
+
+			.lang-nav {
+				top: 10px;
+				right: 12px;
+				padding: 4px 10px;
+				gap: 4px;
+				border-radius: 30px;
+				flex-wrap: nowrap;
+			}
+
+			.lang-btn {
+				padding: 3px 10px;
+				font-size: 13px;
+			}
+
+			.lang-section {
+				padding: 10px 18px 28px;
+				margin-bottom: 30px;
+				scroll-margin-top: 60px;
+			}
+
+			.lang-label {
+				margin-bottom: 10px;
+				font-size: 12px;
+				padding: 2px 14px;
+			}
+
+			h1 {
+				font-size: 19px;
+			}
+
+			h2 {
+				font-size: 16px;
+			}
+
+			p {
+				font-size: 14px;
+			}
+		}
+
+		@media (max-width: 400px) {
+			.lang-nav {
+				top: 8px;
+				right: 8px;
+				padding: 3px 6px;
+				gap: 2px;
+			}
+
+			.lang-btn {
+				padding: 2px 8px;
+				font-size: 12px;
+			}
+		}
+
+		/* ===== 平滑滚动 ===== */
+		html {
+			scroll-behavior: smooth;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 右上角导航按钮 -->
+	<nav class="lang-nav" aria-label="语言切换导航">
+		<button class="lang-btn active" data-target="section-zh-hans" id="btn-zh-hans">简体</button>
+		<button class="lang-btn" data-target="section-zh-hant" id="btn-zh-hant">繁體</button>
+		<button class="lang-btn" data-target="section-en" id="btn-en">English</button>
+	</nav>
+
+	<!-- ===== 简体中文 ===== -->
+	<section class="lang-section" id="section-zh-hans">
+		<div class="lang-label">简体中文</div>
+		<h1>隐私政策</h1>
+		<h2>一、前言</h2>
+		<p>本应用《纪念日倒数 · 日记本》高度尊重并保护所有用户的隐私权。本隐私政策将清晰说明本App的信息收集、使用、存储以及第三方服务规则，请用户在使用前仔细阅读。</p>
+		<h2>二、信息收集与使用说明</h2>
+		<p>本App属于离线工具类应用，绝大多数核心功能无需联网运行，不会收集任何个人敏感信息。为维持免费运营，应用可选择性展示第三方广告，详细说明如下：</p>
+		<p>1. 本App<strong>不会主动收集任何个人敏感信息</strong>，包括但不限于姓名、手机号码、身份证号码、通讯录、相册、麦克风、定位、本地文件等隐私内容。</p>
+		<p>2. 为正常展示广告、优化广告投放效果以及统计曝光数据，正规第三方广告SDK会读取设备基础匿名信息，包括<strong>ANDROID ID、设备型号、网络状态、匿名设备标识</strong>，所有数据无法定位真实自然人身份，仅用于广告展示、优化与数据统计。</p>
+		<p>3. App仅在加载广告时发起网络请求，日记记录、纪念日倒数、计算工具等核心功能全程离线运行，不会联网上传用户任何记录数据。</p>
+		<p>4. 第三方SDK所有数据处理行为均遵守各地隐私法规与应用平台规范，绝不会泄露、售卖用户相关数据。</p>
+		<h2>三、本地数据存储</h2>
+		<p>用户在App内创建的日记内容、纪念日数据、使用记录等全部资料，<strong>仅保存在用户本机设备当中</strong>，不会自动上传云端、同步服务器或者对外发送，用户可以随时手动清除本地数据。</p>
+		<h2>四、第三方服务与信息共享</h2>
+		<p>1. 本App仅接入各大应用商店审核认可的正规第三方广告服务商。</p>
+		<p>2. 不会向任何第三方转让、共享用户个人隐私数据。</p>
+		<p>3. 仅在司法机关、行政部门依法出具法定文书要求时，才会依规配合提供必要资料。</p>
+		<h2>五、个性化广告与用户权益</h2>
+		<p>App可能展示普通广告或者个性化推荐广告。用户可以在手机系统设置内关闭广告追踪与个性化推荐，关闭后不会影响App全部功能正常使用。</p>
+		<h2>六、用户权利</h2>
+		<p>使用本App无需注册账号、登录账号。用户有权随时清理本地数据、关闭广告追踪、停止使用本应用。</p>
+		<p>用户<strong>同意本隐私政策后</strong>，应用才会启动广告服务并读取设备匿名信息；未同意前不会获取任何设备信息。</p>
+		<h2>七、儿童隐私保护</h2>
+		<p>本应用面向全体普通用户，并非专门为未成年人打造，不会主动收集未成年人个人信息。未满18周岁使用者，请在监护人同意前提下使用本软件。</p>
+		<h2>八、政策更新</h2>
+		<p>本隐私政策会根据功能迭代、法律法规调整适时修订，调整内容会跟随应用版本更新公示，继续使用软件即代表同意最新隐私条款。</p>
+		<h2>九、联系方式</h2>
+		<p>如果您对本隐私政策存在疑问，可以通过邮箱联系我们：</p>
+		<p><strong>smartbean228@163.com</strong></p>
+	</section>
+
+	<!-- ===== 繁體中文 ===== -->
+	<section class="lang-section" id="section-zh-hant">
+		<div class="lang-label zh-hant">繁體中文</div>
+		<h1>隱私政策</h1>
+		<h2>一、前言</h2>
+		<p>本應用《紀念日倒數 · 日記本》高度尊重並保護所有用戶的隱私權。本隱私政策將清晰說明本App的資訊收集、使用、儲存以及第三方服務規則，請用戶在使用前仔細閱讀。</p>
+		<h2>二、資訊收集與使用說明</h2>
+		<p>本App屬於離線工具類應用，絕大多數核心功能無需聯網運行，不會收集任何個人敏感資訊。為維持免費運營，應用可選擇性展示第三方廣告，詳細說明如下：</p>
+		<p>1. 本App<strong>不會主動收集任何個人敏感資訊</strong>，包括但不限於姓名、手機號碼、身份證號碼、通訊錄、相簿、麥克風、定位、本地文件等隱私內容。</p>
+		<p>2. 為正常展示廣告、優化廣告投放效果以及統計曝光數據，正規第三方廣告SDK會讀取設備基礎匿名資訊，包括<strong>ANDROID ID、設備型號、網路狀態、匿名設備標識</strong>，所有數據無法定位真實自然人身份，僅用於廣告展示、優化與數據統計。</p>
+		<p>3. App僅在加載廣告時發起網路請求，日記記錄、紀念日倒數、計算工具等核心功能全程離線運行，不會聯網上傳用戶任何記錄數據。</p>
+		<p>4. 第三方SDK所有數據處理行為均遵守各地隱私法規與應用平台規範，絕不會洩露、售賣用戶相關數據。</p>
+		<h2>三、本地數據儲存</h2>
+		<p>用戶在App內建立的日記內容、紀念日數據、使用記錄等全部資料，<strong>僅保存在用戶本機設備當中</strong>，不會自動上傳雲端、同步伺服器或者對外發送，用戶可以隨時手動清除本地數據。</p>
+		<h2>四、第三方服務與資訊共享</h2>
+		<p>1. 本App僅接入各大應用商店審核認可的正規第三方廣告服務商。</p>
+		<p>2. 不會向任何第三方轉讓、共享用戶個人隱私數據。</p>
+		<p>3. 僅在司法機關、行政部門依法出具法定文書要求時，才會依規配合提供必要資料。</p>
+		<h2>五、個性化廣告與用戶權益</h2>
+		<p>App可能展示普通廣告或者個性化推薦廣告。用戶可以在手機系統設定內關閉廣告追蹤與個性化推薦，關閉後不會影響App全部功能正常使用。</p>
+		<h2>六、用戶權利</h2>
+		<p>使用本App無需註冊帳號、登入帳號。用戶有權隨時清理本地數據、關閉廣告追蹤、停止使用本應用。</p>
+		<p>用戶<strong>同意本隱私政策後</strong>，應用才會啟動廣告服務並讀取設備匿名資訊；未同意前不會獲取任何設備資訊。</p>
+		<h2>七、兒童隱私保護</h2>
+		<p>本應用面向全體普通用戶，並非專門為未成年人打造，不會主動收集未成年人個人資訊。未滿18周歲使用者，請在監護人同意前提下使用本軟體。</p>
+		<h2>八、政策更新</h2>
+		<p>本隱私政策會根據功能疊代、法律法規調整適時修訂，調整內容會跟隨應用版本更新公示，繼續使用軟體即代表同意最新隱私條款。</p>
+		<h2>九、聯絡方式</h2>
+		<p>如果您對本隱私政策存在疑問，可以透過郵箱聯繫我們：</p>
+		<p><strong>smartbean228@163.com</strong></p>
+	</section>
+
+	<!-- ===== English ===== -->
+	<section class="lang-section" id="section-en">
+		<div class="lang-label en">English</div>
+		<h1>Privacy Policy</h1>
+		<h2>1. Introduction</h2>
+		<p>This app, <strong>"Love Diary Countdown"</strong>, fully respects and protects the privacy of all users. This Privacy Policy clearly explains how the App collects, uses, stores, and handles information, as well as the rules regarding third‑party services. Please read it carefully before using the App.</p>
+		<h2>2. Information Collection and Usage</h2>
+		<p>This App is an offline utility tool. Most core functions do not require an internet connection and <strong>do not collect any personal sensitive information</strong>. To maintain free operation, the App may optionally display third‑party advertisements. Details are as follows:</p>
+		<p>1. This App <strong>does not actively collect any personal sensitive information</strong>, including but not limited to: name, phone number, ID number, contacts, photo album, microphone, location, local files, or any other private content.</p>
+		<p>2. To properly display ads, optimize ad delivery, and count impressions, certified third‑party advertising SDKs may read basic anonymous device information, including <strong>ANDROID ID, device model, network status, and anonymous device identifiers</strong>. All such data cannot be used to identify any real natural person; they are used solely for ad display, optimization, and statistical purposes.</p>
+		<p>3. The App initiates network requests only when loading ads. Core features — such as diary entries, anniversary countdowns, and calculation tools — run completely offline and never upload any user‑generated data to the internet.</p>
+		<p>4. All data processing by third‑party SDKs complies with applicable privacy laws and platform guidelines. They will never leak or sell user‑related data.</p>
+		<h2>3. Local Data Storage</h2>
+		<p>All content created within the App — including diary entries, anniversary data, and usage records — is <strong>stored exclusively on the user's local device</strong>. It is not automatically uploaded to the cloud, synchronized to servers, or transmitted externally. Users may manually clear local data at any time.</p>
+		<h2>4. Third‑Party Services and Information Sharing</h2>
+		<p>1. This App only integrates with certified third‑party advertising service providers that have been reviewed and approved by major app stores.</p>
+		<p>2. We do not transfer or share users' personal privacy data with any third party.</p>
+		<p>3. Only when required by law — upon presentation of a valid legal document from judicial or administrative authorities — will we cooperate and provide necessary information as required.</p>
+		<h2>5. Personalized Ads and User Rights</h2>
+		<p>The App may display general advertisements or personalized recommendation ads. Users may disable ad tracking and personalized recommendations in their device system settings. Disabling these features will not affect the normal use of any App functions.</p>
+		<h2>6. User Rights</h2>
+		<p>Using this App does not require registration or login. Users have the right to clear local data, disable ad tracking, or stop using the App at any time.</p>
+		<p>Only after the user <strong>agrees to this Privacy Policy</strong> will the App initiate ad services and read anonymous device information; no device information will be accessed before consent is given.</p>
+		<h2>7. Children's Privacy Protection</h2>
+		<p>This App is intended for the general public and is not specifically designed for minors. It does not actively collect personal information from minors. Users under the age of 18 should use this software only with the consent of a parent or guardian.</p>
+		<h2>8. Policy Updates</h2>
+		<p>This Privacy Policy may be revised from time to time due to feature updates or changes in laws and regulations. Revisions will be announced alongside App version updates. Continued use of the software constitutes acceptance of the latest privacy terms.</p>
+		<h2>9. Contact Us</h2>
+		<p>If you have any questions about this Privacy Policy, please contact us via email at:</p>
+		<p><strong>smartbean228@163.com</strong></p>
+	</section>
+
+	<!-- ============================================================ -->
+	<!-- JavaScript：按钮切换 + 高亮 + 自动跳转 -->
+	<!-- ============================================================ -->
+	<script>
+		(function() {
+			const buttons = document.querySelectorAll('.lang-btn');
+			const sections = {
+				'section-zh-hans': document.getElementById('section-zh-hans'),
+				'section-zh-hant': document.getElementById('section-zh-hant'),
+				'section-en': document.getElementById('section-en')
+			};
+
+			// 点击按钮：滚动到对应区块 + 高亮
+			buttons.forEach(btn => {
+				btn.addEventListener('click', function(e) {
+					const targetId = this.getAttribute('data-target');
+					const targetEl = document.getElementById(targetId);
+					if (targetEl) {
+						buttons.forEach(b => b.classList.remove('active'));
+						this.classList.add('active');
+						// 统一偏移量 70px（与 scroll-margin-top 一致）
+						const navHeight = 70;
+						const targetPos = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight;
+						window.scrollTo({
+							top: targetPos,
+							behavior: 'smooth'
+						});
+					}
+				});
+			});
+
+			// 滚动时自动高亮当前可见区块
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						const id = entry.target.id;
+						buttons.forEach(btn => {
+							const target = btn.getAttribute('data-target');
+							if (target === id) {
+								btn.classList.add('active');
+							} else {
+								btn.classList.remove('active');
+							}
+						});
+					}
+				});
+			}, {
+				rootMargin: '-70px 0px -50% 0px',
+				threshold: 0
+			});
+
+			Object.values(sections).forEach(section => {
+				if (section) observer.observe(section);
+			});
+
+			// 从 URL 参数自动跳转
+			function autoScrollFromURL() {
+				const params = new URLSearchParams(window.location.search);
+				const langParam = params.get('lang');
+				if (!langParam) return;
+				const map = {
+					'zh-Hans': 'section-zh-hans',
+					'zh-Hant': 'section-zh-hant',
+					'en': 'section-en'
+				};
+				const sectionId = map[langParam];
+				if (!sectionId) return;
+				const target = document.getElementById(sectionId);
+				if (!target) return;
+				setTimeout(() => {
+					const navHeight = 70;
+					const y = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+					window.scrollTo({
+						top: y,
+						behavior: 'smooth'
+					});
+					buttons.forEach(btn => {
+						btn.classList.toggle('active', btn.dataset.target === sectionId);
+					});
+				}, 400);
+			}
+			autoScrollFromURL();
+		})();
+	</script>
+
+</body>
+</html>
