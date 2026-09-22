@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>聰明豆-移動應用創作室</title>
+	<style>
+		/* ===== 全局重置 & 字體 ===== */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', system-ui, -apple-system, sans-serif;
+			background: linear-gradient(145deg, #f8f5ee 0%, #f0ebe0 100%);
+			min-height: 100vh;
+			padding: 30px 20px 50px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			/* ===== 強制禁止選取 (含所有前綴) ===== */
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			-webkit-touch-callout: none;
+		}
+
+		/* ===== 選中區塊完全透明 ===== */
+		::selection {
+			background: transparent;
+			color: inherit;
+		}
+		::-moz-selection {
+			background: transparent;
+			color: inherit;
+		}
+
+		/* ===== 圖片禁止拖拽、禁止長按選單、禁止交互 ===== */
+		img,
+		a,
+		[draggable="true"] {
+			-webkit-user-drag: none;
+			-khtml-user-drag: none;
+			-moz-user-drag: none;
+			-o-user-drag: none;
+			user-drag: none;
+			-webkit-touch-callout: none;
+		}
+
+		/* ===== 特別針對應用圖標：徹底阻斷所有下載手段 ===== */
+		.app-icon-img {
+			pointer-events: none;
+			-webkit-touch-callout: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+		}
+
+		/* ===== 9:16 相片：同樣禁止下載 ===== */
+		.app-screenshot {
+			pointer-events: none;
+			-webkit-touch-callout: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-webkit-user-drag: none;
+			-khtml-user-drag: none;
+			-moz-user-drag: none;
+			-o-user-drag: none;
+			user-drag: none;
+		}
+
+		.container {
+			max-width: 1200px;
+			width: 100%;
+		}
+
+		/* ===== 頂部品牌區 ===== */
+		.brand-header {
+			text-align: center;
+			margin-bottom: 20px;
+			padding: 30px 20px 10px;
+			position: relative;
+		}
+
+		.brand-title {
+			font-size: 42px;
+			font-weight: 800;
+			color: #3d6b3d;
+			letter-spacing: 4px;
+			text-shadow: 0 2px 12px rgba(61, 107, 61, 0.15);
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			gap: 12px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.brand-title .logo-img {
+			height: 48px;
+			width: auto;
+			display: block;
+			flex-shrink: 0;
+			pointer-events: none;
+			-webkit-touch-callout: none;
+		}
+
+		.brand-title .title-text {
+			display: inline-block;
+		}
+
+		.brand-title .home-icon {
+			font-size: 32px;
+			margin-left: 4px;
+			display: inline-block;
+		}
+
+		.brand-sub {
+			font-size: 16px;
+			color: #7a8f7a;
+			margin-top: 6px;
+			letter-spacing: 2px;
+			font-weight: 300;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		/* ===== 應用卡片網格 (單卡片置中) ===== */
+		.app-grid {
+			display: grid;
+			grid-template-columns: minmax(0, 340px);
+			justify-content: center;
+			gap: 28px;
+			margin-top: 6px;
+		}
+
+		/* ===== 單張卡片 ===== */
+		.app-card {
+			background: rgba(255, 255, 255, 0.85);
+			backdrop-filter: blur(12px);
+			border-radius: 24px;
+			padding: 28px 24px 20px;
+			box-shadow: 0 8px 32px rgba(61, 107, 61, 0.08),
+				0 2px 8px rgba(61, 107, 61, 0.04);
+			border: 1px solid rgba(255, 255, 255, 0.6);
+			transition: box-shadow 0.3s ease, border-color 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			overflow: hidden;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			-webkit-touch-callout: none;
+		}
+
+		.app-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4px;
+			background: linear-gradient(90deg, #6a9e6a, #b8d9b8, #6a9e6a);
+			background-size: 200% 100%;
+			animation: shimmer 4s ease-in-out infinite;
+		}
+
+		@keyframes shimmer {
+			0%,
+			100% {
+				background-position: 0% 0%;
+			}
+			50% {
+				background-position: 100% 0%;
+			}
+		}
+
+		.app-card:hover {
+			box-shadow: 0 16px 48px rgba(61, 107, 61, 0.12),
+				0 4px 12px rgba(61, 107, 61, 0.06);
+			border-color: rgba(61, 107, 61, 0.15);
+		}
+
+		/* ===== 自訂圖標 (1:1) ===== */
+		.app-icon-img {
+			width: 64px;
+			height: 64px;
+			border-radius: 16px;
+			object-fit: cover;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+			transition: transform 0.2s ease;
+			display: block;
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			flex-shrink: 0;
+		}
+
+		.app-card:hover .app-icon-img {
+			transform: scale(1.04);
+		}
+
+		/* ===== 並排三張 9:16 相片 ===== */
+		.screenshot-row {
+			display: flex;
+			gap: 8px;
+			justify-content: center;
+			width: 100%;
+			margin: 8px 0 14px;
+			transition: transform 0.25s ease;
+		}
+
+		.app-card:hover .screenshot-row {
+			transform: scale(1.02);
+		}
+
+		.app-screenshot-wrap {
+			flex: 1 1 0;
+			min-width: 0;
+			border-radius: 14px;
+			overflow: hidden;
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+			background: #eae5d8;
+			aspect-ratio: 9 / 16;
+			transition: box-shadow 0.3s ease;
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			position: relative;
+		}
+
+		.app-card:hover .app-screenshot-wrap {
+			box-shadow: 0 10px 32px rgba(61, 107, 61, 0.18);
+		}
+
+		.app-screenshot {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			transition: filter 0.3s ease;
+			background: #d9d4c8;
+		}
+
+		/* ===== 卡片內容 ===== */
+		.app-name {
+			font-size: 22px;
+			font-weight: 700;
+			color: #2d4a2d;
+			letter-spacing: 1px;
+			margin-bottom: 4px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.app-desc {
+			font-size: 14px;
+			color: #5a6f5a;
+			line-height: 1.6;
+			margin-bottom: 16px;
+			flex: 1;
+			min-height: 44px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		/* ===== 中繼資料 ===== */
+		.app-meta {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 6px 12px;
+			font-size: 13px;
+			color: #7a8f7a;
+			padding-top: 12px;
+			border-top: 1px solid rgba(61, 107, 61, 0.08);
+			margin-top: auto;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.meta-left {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px 14px;
+			align-items: center;
+			width: 100%;
+		}
+
+		.meta-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.meta-item .label {
+			font-weight: 400;
+			color: #9aaf9a;
+		}
+
+		.meta-item .value {
+			font-weight: 500;
+			color: #3d6b3d;
+		}
+
+		/* ===== 雙下載按鈕列 ===== */
+		.download-row {
+			display: flex;
+			gap: 10px;
+			width: 100%;
+			margin-top: 14px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.download-btn-sm {
+			flex: 1 1 0;
+			min-width: 0;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 5px;
+			background: #3d6b3d;
+			color: #fff;
+			border: none;
+			padding: 7px 8px;
+			border-radius: 30px;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			font-family: inherit;
+			line-height: 1.4;
+			white-space: nowrap;
+			outline: none;
+			-webkit-tap-highlight-color: transparent;
+			box-shadow: 0 4px 0 #1f3f1f, 0 2px 8px rgba(61, 107, 61, 0.25);
+			transition: all 0.08s ease-out;
+			transform: translateY(0);
+			position: relative;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			-webkit-touch-callout: none;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		/* Google Play 按鈕 */
+		.download-btn-sm[data-store="google"] {
+			background: #3d6b3d;
+		}
+
+		/* 華為應用市場按鈕 */
+		.download-btn-sm[data-store="huawei"] {
+			background: #b03a34;
+			box-shadow: 0 4px 0 #7a2622, 0 2px 8px rgba(176, 58, 52, 0.28);
+		}
+
+		.download-btn-sm[data-store="google"]:hover {
+			background: #4a7a4a;
+			box-shadow: 0 4px 0 #1f3f1f, 0 4px 12px rgba(61, 107, 61, 0.35);
+		}
+
+		.download-btn-sm[data-store="huawei"]:hover {
+			background: #c2453f;
+			box-shadow: 0 4px 0 #7a2622, 0 4px 12px rgba(176, 58, 52, 0.38);
+		}
+
+		.download-btn-sm:active {
+			transform: translateY(3px);
+		}
+
+		.download-btn-sm[data-store="google"]:active {
+			box-shadow: 0 1px 0 #1f3f1f, 0 2px 6px rgba(61, 107, 61, 0.2);
+			background: #2d6a2d;
+			transition: all 0.04s ease-in;
+		}
+
+		.download-btn-sm[data-store="huawei"]:active {
+			box-shadow: 0 1px 0 #7a2622, 0 2px 6px rgba(176, 58, 52, 0.22);
+			background: #96302b;
+			transition: all 0.04s ease-in;
+		}
+
+		.download-btn-sm:focus-visible {
+			outline: none;
+		}
+
+		.download-btn-sm::-moz-focus-inner {
+			border: 0;
+		}
+
+		.download-btn-sm .icon-dl {
+			font-size: 13px;
+			line-height: 1;
+			flex-shrink: 0;
+		}
+
+		.download-btn-sm .dl-text {
+			font-size: 12px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		/* ===== 頁尾 ===== */
+		.footer-note {
+			margin-top: 24px;
+			font-size: 13px;
+			color: #9aaf9a;
+			text-align: center;
+			letter-spacing: 0.5px;
+			border-top: 1px solid rgba(61, 107, 61, 0.08);
+			padding-top: 24px;
+			width: 100%;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.footer-note span {
+			opacity: 0.6;
+		}
+
+		/* ===== 響應式 ===== */
+		@media (max-width: 768px) {
+			body {
+				padding: 16px 12px 30px;
+			}
+			.brand-title {
+				font-size: 30px;
+				letter-spacing: 2px;
+				gap: 8px;
+			}
+			.brand-title .logo-img {
+				height: 36px;
+			}
+			.brand-title .home-icon {
+				font-size: 24px;
+			}
+			.app-grid {
+				grid-template-columns: minmax(0, 340px);
+				gap: 20px;
+			}
+			.app-card {
+				padding: 22px 18px 18px;
+			}
+			.app-icon-img {
+				width: 56px;
+				height: 56px;
+			}
+			.app-name {
+				font-size: 20px;
+			}
+			.meta-left {
+				justify-content: space-between;
+			}
+			.download-btn-sm {
+				font-size: 11.5px;
+				padding: 7px 6px;
+			}
+			.download-btn-sm .dl-text {
+				font-size: 11.5px;
+			}
+		}
+
+		@media (max-width: 400px) {
+			.brand-title {
+				font-size: 24px;
+				gap: 6px;
+			}
+			.brand-title .logo-img {
+				height: 28px;
+			}
+			.brand-title .home-icon {
+				font-size: 20px;
+			}
+			.meta-left {
+				flex-wrap: wrap;
+				gap: 4px 10px;
+			}
+			.download-row {
+				gap: 8px;
+			}
+			.download-btn-sm {
+				font-size: 11px;
+				padding: 7px 4px;
+				gap: 3px;
+			}
+			.download-btn-sm .dl-text {
+				font-size: 11px;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="container">
+
+		<!-- ===== 品牌標頭 ===== -->
+		<header class="brand-header">
+			<h1 class="brand-title">
+				<img class="logo-img" src="logo.png" alt="聰明豆 Logo" draggable="false" />
+				<span class="title-text">移動應用創作室</span>
+				<span class="home-icon">🏠</span>
+			</h1>
+			<p class="brand-sub">— 用心打造的每個應用 —</p>
+			<p class="brand-sub">谷歌/華為開發者聯盟成員</p>
+		</header>
+
+		<!-- ===== 應用卡片網格 ===== -->
+		<div class="app-grid" id="appGrid"></div>
+
+		<!-- ===== 底部 ===== -->
+		<div class="footer-note">
+			<span>© 2026 聰明豆 smartbean228@gmail.com</span>
+		</div>
+
+	</div>
+
+	<script>
+		// ================================================================
+		//  1. 應用數據 (只保留「紀念日倒數」，已刪除 version 欄位)
+		//     ★ 請將下面的 googlePlayUrl / huaweiUrl 替換為真實連結 ★
+		//     screenshots 陣列可自由增減相片
+		// ================================================================
+		const apps = [{
+			id: 'love',
+			iconFile: 'icon4.png',
+			name: '紀念日倒數·日記本 (手機/平板) ',
+			desc: '紀念日 | 倒數日 | 累計日 | 日期備忘 | 圖文日記相冊 | 日程提醒，支持公曆/農曆倒數，繁簡英日韓多國語言。(免費下載)',
+			date: '2026年6月',
+			screenshots: ['a.jpg', 'b.jpg', 'c.jpg'],   // 並排三張相片
+			// --- 雙商店下載連結 (請自行替換) ---
+			googlePlayUrl: 'https://play.google.com/store/apps/details?id=com.smartbean.love',
+			huaweiUrl: 'https://appgallery.huawei.com/app/C117865971'
+		}];
+
+		// ================================================================
+		//  2. 渲染卡片 (已移除版本號區塊，加入並排相片)
+		// ================================================================
+		const grid = document.getElementById('appGrid');
+
+		function renderCards() {
+			grid.innerHTML = apps.map(app => `
+					<div class="app-card" data-id="${app.id}">
+						<img class="app-icon-img" src="${app.iconFile}" alt="${app.name} 圖標" loading="lazy" draggable="false" />
+						<div class="app-name">${app.name}</div>
+
+						<!-- 並排三張 9:16 相片 -->
+						<div class="screenshot-row">
+							${app.screenshots.map(src => `
+								<div class="app-screenshot-wrap">
+									<img class="app-screenshot" src="${src}" alt="${app.name} 預覽" loading="lazy" draggable="false" />
+								</div>
+							`).join('')}
+						</div>
+
+						<div class="app-desc">${app.desc}</div>
+
+						<div class="app-meta">
+							<div class="meta-left">
+								<span class="meta-item">
+									<span class="label">📆 開發</span>
+									<span class="value">${app.date}</span>
+								</span>
+							</div>
+						</div>
+
+						<!-- 雙下載按鈕 -->
+						<div class="download-row">
+							<button class="download-btn-sm" data-store="google" data-url="${app.googlePlayUrl}" data-name="${app.name}">
+								<span class="icon-dl">▶</span>
+								<span class="dl-text">Google Play 下載</span>
+							</button>
+							<button class="download-btn-sm" data-store="huawei" data-url="${app.huaweiUrl}" data-name="${app.name}">
+								<span class="icon-dl">📥</span>
+								<span class="dl-text">華為應用市場下載</span>
+							</button>
+						</div>
+					</div>
+				`).join('');
+		}
+
+		renderCards();
+
+		// ================================================================
+		//  3. 下載功能 (開啟對應商店頁面)
+		// ================================================================
+		function openStore(url) {
+			if (!url) {
+				alert('下載連結尚未設定');
+				return;
+			}
+			// 新視窗開啟；若為瀏覽器阻擋，改用同頁跳轉
+			const w = window.open(url, '_blank', 'noopener,noreferrer');
+			if (!w) {
+				window.location.href = url;
+			}
+		}
+
+		document.addEventListener('click', function(e) {
+			const btn = e.target.closest('.download-btn-sm');
+			if (!btn) return;
+			openStore(btn.dataset.url);
+		});
+
+		// ================================================================
+		//  4. 強力防複製 & 防圖片下載保護 (多層攔截)
+		// ================================================================
+
+		// --- 4a. 攔截右鍵選單 ---
+		document.addEventListener('contextmenu', function(e) {
+			e.preventDefault();
+			return false;
+		});
+
+		// --- 4b. 攔截選取開始 ---
+		document.addEventListener('selectstart', function(e) {
+			e.preventDefault();
+			return false;
+		});
+
+		// --- 4c. 攔截複製 / 剪下 ---
+		document.addEventListener('copy', function(e) {
+			e.preventDefault();
+			return false;
+		});
+		document.addEventListener('cut', function(e) {
+			e.preventDefault();
+			return false;
+		});
+
+		// --- 4d. 攔截 beforecopy ---
+		document.addEventListener('beforecopy', function(e) {
+			e.preventDefault();
+			return false;
+		});
+
+		// --- 4e. 攔截拖拽 (所有元素) ---
+		document.addEventListener('dragstart', function(e) {
+			e.preventDefault();
+			return false;
+		});
+
+		// --- 4f. 持續清除選區 ---
+		let selectionClearPending = false;
+		document.addEventListener('selectionchange', function() {
+			if (selectionClearPending) return;
+			selectionClearPending = true;
+			requestAnimationFrame(function() {
+				const sel = window.getSelection();
+				if (sel && sel.rangeCount > 0) {
+					const node = sel.anchorNode;
+					if (node && node.nodeType === Node.ELEMENT_NODE) {
+						const el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+						if (el && !el.closest('input, textarea, [contenteditable="true"]')) {
+							sel.removeAllRanges();
+						}
+					} else if (node && node.nodeType === Node.TEXT_NODE) {
+						const parent = node.parentElement;
+						if (parent && !parent.closest('input, textarea, [contenteditable="true"]')) {
+							sel.removeAllRanges();
+						}
+					} else {
+						sel.removeAllRanges();
+					}
+				}
+				selectionClearPending = false;
+			});
+		});
+
+		// --- 4g. 攔截打印 ---
+		window.addEventListener('beforeprint', function(e) {
+			e.preventDefault();
+			return false;
+		});
+		window.addEventListener('afterprint', function(e) {
+			e.preventDefault();
+			return false;
+		});
+
+		// --- 4h. 攔截鍵盤快捷鍵 ---
+		document.addEventListener('keydown', function(e) {
+			const ctrl = e.ctrlKey || e.metaKey;
+			const shift = e.shiftKey;
+			const alt = e.altKey;
+			const key = e.key.toLowerCase();
+
+			if (ctrl && (key === 'c' || key === 'x' || key === 'a' || key === 'u' || key === 's')) {
+				e.preventDefault();
+				return false;
+			}
+			if (key === 'f12') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && shift && (key === 'i' || key === 'j' || key === 'c')) {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && shift && key === 'u') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && key === 'u') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && key === 'p') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && key === 's') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && shift && key === 'p') {
+				e.preventDefault();
+				return false;
+			}
+			if (key === 'f3') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && key === 'k') {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && alt && (key === 'i' || key === 'j')) {
+				e.preventDefault();
+				return false;
+			}
+			if (ctrl && shift && (key === 'i' || key === 'j' || key === 'c')) {
+				e.preventDefault();
+				return false;
+			}
+			return true;
+		});
+
+		// --- 4i. 覆蓋 execCommand ---
+		const origExecCommand = document.execCommand;
+		document.execCommand = function(commandId, showUI, value) {
+			if (commandId === 'copy' || commandId === 'cut') {
+				return false;
+			}
+			return origExecCommand.call(document, commandId, showUI, value);
+		};
+
+		// --- 4j. 所有圖片和連結強制禁止拖拽 ---
+		document.querySelectorAll('img, a').forEach(el => {
+			el.setAttribute('draggable', 'false');
+			el.addEventListener('dragstart', function(e) {
+				e.preventDefault();
+				return false;
+			});
+		});
+
+		// --- 4k. 移動端長按保護 (已由 CSS 處理) ---
+		document.addEventListener('touchstart', function(e) {
+			const target = e.target;
+			if (target.closest('.download-btn-sm')) {
+				return;
+			}
+		}, { passive: true });
+
+		// --- 4l. 列印樣式隱藏 ---
+		const stylePrint = document.createElement('style');
+		stylePrint.textContent = `
+				@media print {
+					body { display: none !important; }
+				}
+			`;
+		document.head.appendChild(stylePrint);
+
+		console.log('✅ 已啟用強力防複製 & 防圖片下載保護');
+		console.log('✅ 圖片已設定 pointer-events: none，無法下載');
+	</script>
+
+</body>
+</html>
